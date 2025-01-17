@@ -1,0 +1,41 @@
+configs:
+  - name: "eric-evans"
+    preText: |
+      これは "eric-evans" 設定で出力されるファイルです。
+      相談したい内容としては…
+    postText: |
+      以上が "eric-evans" 設定の出力です。
+      何かアドバイスあればお願いします。
+    targets:
+      include:
+        - "packages/core"
+        - "packages/utils"
+      exclude:
+        - "packages/core/dist"
+        - "**/node_modules"
+      filePatterns:
+        - "**/*.ts"
+        - "**/*.js"
+    tree:
+      maxDepth: 5
+      directoriesOnly: false
+
+  - name: "review"
+    preText: |
+      こちらは "review" 設定用です。
+      Web アプリをレビューしていただきたく…
+    postText: |
+      以上が "review" 設定の出力です。
+      問題点や修正点のご指摘をお待ちしています。
+    targets:
+      include:
+        - "apps/www"
+      exclude:
+        - "apps/www/node_modules"
+      filePatterns:
+        - "**/*.vue"
+        - "**/*.js"
+        - "**/*.ts"
+    tree:
+      maxDepth: 10
+      directoriesOnly: false
