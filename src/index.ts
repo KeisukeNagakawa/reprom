@@ -47,7 +47,15 @@ async function main() {
   const matchedFiles = collectFiles(targetConfig.targets);
 
   // 4. ツリー構造生成
-  const treeText = generateTree(matchedFiles, targetConfig.tree);
+  // Normalize paths and remove duplicate src directory
+  const normalizedPaths = matchedFiles.map((filePath) => {
+    // Remove leading ./ and /
+    let normalized = filePath.replace(/^\.\//, "").replace(/^\/+/, "");
+    // Remove duplicate src directory
+    normalized = normalized.replace(/^src\/src\//, "src/");
+    return normalized;
+  });
+  const treeText = generateTree(normalizedPaths, targetConfig.tree);
 
   // 5. Markdown 本文生成
   const mdOutput = generateMarkdown({

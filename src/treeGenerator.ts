@@ -9,25 +9,62 @@ interface TreeNode {
 function buildTree(paths: string[], maxDepth: number = Infinity): TreeNode {
   const root: TreeNode = { name: ".", children: [], isDirectory: true };
 
-  for (const filePath of paths) {
-    const parts = filePath.split("/");
-    let currentNode = root;
-    let currentDepth = 0;
+  // Group files by their root directory
+  const rootDirs = new Set<string>();
+  paths.forEach((path) => {
+    const firstDir = path.split("/")[0];
+    rootDirs.add(firstDir);
+  });
 
-    for (const part of parts) {
-      if (currentDepth >= maxDepth) break;
+  // If there's only one root directory, make it the root node
+  if (rootDirs.size === 1) {
+    const rootDir = Array.from(rootDirs)[0];
+    root.name = rootDir;
 
-      let child = currentNode.children.find((node) => node.name === part);
-      if (!child) {
-        child = {
-          name: part,
-          children: [],
-          isDirectory: currentDepth < parts.length - 1,
-        };
-        currentNode.children.push(child);
+    // Process paths relative to the root directory
+    for (const filePath of paths) {
+      const parts = filePath.split("/").slice(1); // Skip the root directory
+      let currentNode = root;
+      let currentDepth = 0;
+
+      for (const part of parts) {
+        if (currentDepth >= maxDepth) break;
+
+        let child = currentNode.children.find((node) => node.name === part);
+        if (!child) {
+          child = {
+            name: part,
+            children: [],
+            isDirectory: currentDepth < parts.length - 1,
+          };
+          currentNode.children.push(child);
+        }
+        currentNode = child;
+        currentDepth++;
       }
-      currentNode = child;
-      currentDepth++;
+    }
+  } else {
+    // If there are multiple root directories, keep the "." root
+    for (const filePath of paths) {
+      const parts = filePath.split("/");
+      let currentNode = root;
+      let currentDepth = 0;
+
+      for (const part of parts) {
+        if (currentDepth >= maxDepth) break;
+
+        let child = currentNode.children.find((node) => node.name === part);
+        if (!child) {
+          child = {
+            name: part,
+            children: [],
+            isDirectory: currentDepth < parts.length - 1,
+          };
+          currentNode.children.push(child);
+        }
+        currentNode = child;
+        currentDepth++;
+      }
     }
   }
 
@@ -36,12 +73,6 @@ function buildTree(paths: string[], maxDepth: number = Infinity): TreeNode {
 
 function renderTree(node: TreeNode, prefix: string = ""): string {
   let result = "";
-  const isLast = true;
-
-  if (node.name !== ".") {
-    result += `${prefix}${isLast ? "└── " : "├── "}${node.name}\n`;
-    prefix += isLast ? "    " : "│   ";
-  }
 
   const sortedChildren = node.children.sort((a, b) => {
     if (a.isDirectory === b.isDirectory) {

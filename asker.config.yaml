@@ -8,11 +8,10 @@ configs:
       何かアドバイスあればお願いします。
     targets:
       include:
-        - "packages/core"
-        - "packages/utils"
+        - "src"
       exclude:
-        - "packages/core/dist"
         - "**/node_modules"
+        - "dist"
       filePatterns:
         - "**/*.ts"
         - "**/*.js"
