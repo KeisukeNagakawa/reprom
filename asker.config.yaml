@@ -1,7 +1,7 @@
 configs:
-  - name: "asker"
+  - name: "all"
     preText: |
-      以下はaskerのファイルとディレクトリ構造の一覧です。
+      Below is the file and directory structure of asker.
     output: "clipboard" # "file" or "clipboard"
     targets:
       include:
@@ -11,21 +11,22 @@ configs:
       exclude:
         - "**/node_modules"
         - "dist"
+        - "asker-asker.md"
       filePatterns:
         - "**/*.ts"
         - "**/*.js"
         - "**/*.yaml"
         - "**/*.json"
-        - "readme.md"
+        - "*.md"
     tree:
       maxDepth: 5
       directoriesOnly: false
 
-  - name: "review"
+  - name: "ask ai"
     preText: |
-      こちらは "review" 設定用です。
+      Here is the file and directory structure of asker. Read it carefully and answer user's question placed at the end.
     postText: |
-      以上が "review" 設定の出力です。
+      Question:
     output: "clipboard" # クリップボードにコピーする
     targets:
       include:
