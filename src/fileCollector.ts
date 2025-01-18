@@ -1,23 +1,31 @@
+// fileCollector.ts
 import fg from "fast-glob";
 import path from "path";
 import { TargetsConfig } from "./config";
+
 export function collectFiles(targets: TargetsConfig): string[] {
   const { include, exclude = [], filePatterns = [] } = targets;
-  // パターンの組み立ては「そのまま」あるいは "**/*" デフォルトにする程度にしておく
+  // パターンが指定されていない場合はデフォルトで " **/* " とする
   const patterns = filePatterns.length ? filePatterns : ["**/*"];
 
-  const result = fg.sync(patterns, {
+  // 複数の include に対してパターンをフラット化する
+  // 例: include = ["src","bin"], patterns = ["**/*.ts"] -> ["src/**/*.ts", "bin/**/*.ts"]
+  const mergedPatterns = include.flatMap((inc) =>
+    patterns.map((pat) => path.join(inc, pat).replace(/\\/g, "/"))
+  );
+
+  // fast-glob を実行。ルートは process.cwd() にする
+  const result = fg.sync(mergedPatterns, {
     ignore: exclude,
     dot: true,
     onlyFiles: false,
-    cwd: path.join(process.cwd(), include[0]),
+    cwd: process.cwd(),
   });
 
-  // fast-glob は `cwd` を基準とした相対パスで返す
-  // 例: "config.ts", "index.ts", "subdir/file.ts" など
-  // それに `include[0]` を結合すれば最終的に "src/config.ts" などが得られる
-  const normalizedResults = result.map((p) =>
-    path.join(include[0], p).replace(/\\/g, "/")
-  );
+  // 今度はパスを二重に連結しないようにする
+  // fast-glob は既に "src/config.ts", "bin/xxx.ts" のような相対パスを返すはず
+  const normalizedResults = result.map((p) => p.replace(/\\/g, "/"));
+
+  // 重複除去
   return Array.from(new Set(normalizedResults));
 }
