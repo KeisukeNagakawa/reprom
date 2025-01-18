@@ -22,7 +22,7 @@ configs:
       maxDepth: 5
       directoriesOnly: false
 
-  - name: "ask ai"
+  - name: "ai"
     preText: |
       Here is the file and directory structure of asker. Read it carefully and answer user's question placed at the end.
     postText: |
@@ -30,9 +30,13 @@ configs:
     output: "clipboard"
     targets:
       include:
-        - "apps/www"
+        - "src"
+        - "bin"
+        - "./"
       exclude:
-        - "apps/www/node_modules"
+        - "**/node_modules"
+        - "dist"
+        - "asker-asker.md"
       filePatterns:
         - "**/*.vue"
         - "**/*.js"
