@@ -1,17 +1,17 @@
 {
-  "name": "asker",
+  "name": "askify",
   "version": "1.0.0",
   "description": "A CLI tool to export directory structure and file contents into a single Markdown for AI.",
   "main": "dist/src/index.js",
   "bin": {
-    "asker": "bin/asker.js"
+    "askify": "bin/askify.js"
   },
   "files": [
     "dist",
     "bin",
     "LICENSE",
     "readme.md",
-    "asker.config.yaml"
+    "askify.config.yaml"
   ],
   "scripts": {
     "build": "tsc",

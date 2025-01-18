@@ -52,7 +52,7 @@ async function main() {
   const argv = (await yargs(hideBin(process.argv))
     .option("config", {
       type: "string",
-      default: "asker.config.yaml",
+      default: "askify.config.yaml",
       description: "設定ファイル(YAML)のパス",
     })
     .option("name", {
@@ -99,7 +99,7 @@ async function main() {
 
   // 7. 出力先の判定
   const outputType = targetConfig.output ?? "file";
-  const outFile = `asker-${targetConfig.name}.md`;
+  const outFile = `askify-${targetConfig.name}.md`;
 
   if (outputType === "file") {
     fs.writeFileSync(outFile, mdOutput, "utf-8");

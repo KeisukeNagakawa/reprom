@@ -1,7 +1,7 @@
 configs:
   - name: "all"
     preText: |
-      Below is the file and directory structure of asker.
+      Below is the file and directory structure of askify.
     output: "clipboard" # "file" or "clipboard"
     targets:
       include:
@@ -11,7 +11,7 @@ configs:
       exclude:
         - "**/node_modules"
         - "dist"
-        - "asker-asker.md"
+        - "askify-askify.md"
       filePatterns:
         - "**/*.ts"
         - "**/*.js"
@@ -24,7 +24,7 @@ configs:
 
   - name: "ai"
     preText: |
-      Here is the file and directory structure of asker. Read it carefully and answer user's question placed at the end.
+      Here is the file and directory structure of askify. Read it carefully and answer user's question placed at the end.
     postText: |
       Question:
     output: "clipboard"
@@ -36,7 +36,7 @@ configs:
       exclude:
         - "**/node_modules"
         - "dist"
-        - "asker-asker.md"
+        - "askify-askify.md"
       filePatterns:
         - "**/*.vue"
         - "**/*.js"
