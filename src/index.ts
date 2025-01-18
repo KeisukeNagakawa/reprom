@@ -95,18 +95,17 @@ async function main() {
 
   // 6. 文字数カウント
   const totalChars = mdOutput.length;
-  const mdFinal =
-    mdOutput + `\n\n## 統計情報\n- **合計文字数**: ${totalChars}\n`;
+  console.log(`Total characters: ${totalChars}`);
 
   // 7. 出力先の判定
   const outputType = targetConfig.output ?? "file";
   const outFile = `asker-${targetConfig.name}.md`;
 
   if (outputType === "file") {
-    fs.writeFileSync(outFile, mdFinal, "utf-8");
+    fs.writeFileSync(outFile, mdOutput, "utf-8");
     console.log(`Exported to ${outFile}`);
   } else if (outputType === "clipboard") {
-    copyToClipboard(mdFinal);
+    copyToClipboard(mdOutput);
     console.log("Markdown has been copied to your clipboard.");
   }
 }
