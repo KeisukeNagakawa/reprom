@@ -5,13 +5,12 @@
 # Directory Structure
 
 ```
-└── src
-    └── src
-        ├── config.ts
-        ├── fileCollector.ts
-        ├── index.ts
-        ├── markdownGenerator.ts
-        └── treeGenerator.ts
+src
+├── config.ts
+├── fileCollector.ts
+├── index.ts
+├── markdownGenerator.ts
+└── treeGenerator.ts
 ```
 
 # File Contents
@@ -62,37 +61,22 @@ import { TargetsConfig } from "./config";
 
 export function collectFiles(targets: TargetsConfig): string[] {
   const { include, exclude = [], filePatterns = [] } = targets;
+  // パターンの組み立ては「そのまま」あるいは "**/*" デフォルトにする程度にしておく
+  const patterns = filePatterns.length ? filePatterns : ["**/*"];
 
-  // include + filePatterns から最終的に検索パターンを組み立てる
-  const patterns: string[] = [];
-  for (const inc of include) {
-    // Remove any leading/trailing slashes to prevent path duplication
-    const normalizedInc = inc.replace(/^\/+|\/+$/g, "");
-    for (const pattern of filePatterns) {
-      // Remove any leading **/ from the pattern to prevent it from searching from root
-      const cleanPattern = pattern.replace(/^\*\*\//, "");
-      // Don't include the directory in the pattern if it's already in the include path
-      const patternWithoutDir = cleanPattern.replace(
-        new RegExp(`^${normalizedInc}/`),
-        ""
-      );
-      patterns.push(patternWithoutDir);
-    }
-  }
-
-  // fast-glob で探索
   const result = fg.sync(patterns, {
     ignore: exclude,
-    dot: true, // .gitignore に載るようなファイルやフォルダも対象に含める場合はtrue
-    onlyFiles: false, // ディレクトリも結果に含めておき、後で tree 生成に使う
-    cwd: path.join(process.cwd(), include[0]), // Use the include directory as the base
+    dot: true,
+    onlyFiles: false,
+    cwd: path.join(process.cwd(), include[0]),
   });
 
-  // 重複排除と正規化
-  const normalizedResults = result.map((p) => {
-    // Prepend the include directory and normalize path
-    return path.join(include[0], p).replace(/\\/g, "/");
-  });
+  // fast-glob は `cwd` を基準とした相対パスで返す
+  // 例: "config.ts", "index.ts", "subdir/file.ts" など
+  // それに `include[0]` を結合すれば最終的に "src/config.ts" などが得られる
+  const normalizedResults = result.map((p) =>
+    path.join(include[0], p).replace(/\\/g, "/")
+  );
   return Array.from(new Set(normalizedResults));
 }
 
@@ -150,14 +134,9 @@ async function main() {
   const matchedFiles = collectFiles(targetConfig.targets);
 
   // 4. ツリー構造生成
-  // Normalize paths and remove duplicate src directory
-  const normalizedPaths = matchedFiles.map((filePath) => {
-    // Remove leading ./ and /
-    let normalized = filePath.replace(/^\.\//, "").replace(/^\/+/, "");
-    // Remove duplicate src directory
-    normalized = normalized.replace(/^src\/src\//, "src/");
-    return normalized;
-  });
+  const normalizedPaths = matchedFiles.map((filePath) =>
+    filePath.replace(/^\.\//, "").replace(/^\/+/, "")
+  );
   const treeText = generateTree(normalizedPaths, targetConfig.tree);
 
   // 5. Markdown 本文生成
@@ -309,9 +288,13 @@ function buildTree(paths: string[], maxDepth: number = Infinity): TreeNode {
 
   return root;
 }
-
-function renderTree(node: TreeNode, prefix: string = ""): string {
+function renderTree(node: TreeNode, prefix = "", isRoot = true): string {
   let result = "";
+
+  // ルートノードが "." でなければ、ノード自身を表示する
+  if (isRoot && node.name !== ".") {
+    result += `${node.name}\n`;
+  }
 
   const sortedChildren = node.children.sort((a, b) => {
     if (a.isDirectory === b.isDirectory) {
@@ -328,7 +311,7 @@ function renderTree(node: TreeNode, prefix: string = ""): string {
 
     result += `${childPrefix}${child.name}\n`;
     if (child.children.length > 0) {
-      result += renderTree(child, nextPrefix);
+      result += renderTree(child, nextPrefix, false);
     }
   }
 
@@ -338,13 +321,12 @@ function renderTree(node: TreeNode, prefix: string = ""): string {
 export function generateTree(paths: string[], config: TreeConfig = {}): string {
   const { maxDepth = Infinity, directoriesOnly = false } = config;
 
-  // If directoriesOnly is true, filter out non-directory paths
   const filteredPaths = directoriesOnly
     ? paths.filter((p) => !p.includes("."))
     : paths;
 
   const tree = buildTree(filteredPaths, maxDepth);
-  return renderTree(tree);
+  return renderTree(tree, "", true);
 }
 
 ```
@@ -356,4 +338,4 @@ export function generateTree(paths: string[], config: TreeConfig = {}): string {
 
 
 ## 統計情報
-- **合計文字数**: 8794
+- **合計文字数**: 7937

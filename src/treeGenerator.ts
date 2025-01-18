@@ -70,9 +70,13 @@ function buildTree(paths: string[], maxDepth: number = Infinity): TreeNode {
 
   return root;
 }
-
-function renderTree(node: TreeNode, prefix: string = ""): string {
+function renderTree(node: TreeNode, prefix = "", isRoot = true): string {
   let result = "";
+
+  // ルートノードが "." でなければ、ノード自身を表示する
+  if (isRoot && node.name !== ".") {
+    result += `${node.name}\n`;
+  }
 
   const sortedChildren = node.children.sort((a, b) => {
     if (a.isDirectory === b.isDirectory) {
@@ -89,7 +93,7 @@ function renderTree(node: TreeNode, prefix: string = ""): string {
 
     result += `${childPrefix}${child.name}\n`;
     if (child.children.length > 0) {
-      result += renderTree(child, nextPrefix);
+      result += renderTree(child, nextPrefix, false);
     }
   }
 
@@ -99,11 +103,10 @@ function renderTree(node: TreeNode, prefix: string = ""): string {
 export function generateTree(paths: string[], config: TreeConfig = {}): string {
   const { maxDepth = Infinity, directoriesOnly = false } = config;
 
-  // If directoriesOnly is true, filter out non-directory paths
   const filteredPaths = directoriesOnly
     ? paths.filter((p) => !p.includes("."))
     : paths;
 
   const tree = buildTree(filteredPaths, maxDepth);
-  return renderTree(tree);
+  return renderTree(tree, "", true);
 }
