@@ -1,6 +1,6 @@
 {
   "name": "askify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CLI tool to export directory structure and file contents into a single Markdown for AI.",
   "main": "dist/src/index.js",
   "bin": {
