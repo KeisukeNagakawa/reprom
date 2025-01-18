@@ -6,12 +6,16 @@ configs:
       include:
         - "src"
         - "bin"
+        - "./"
       exclude:
         - "**/node_modules"
         - "dist"
       filePatterns:
         - "**/*.ts"
         - "**/*.js"
+        - "**/*.yaml"
+        - "**/*.json"
+        - "readme.md"
     tree:
       maxDepth: 5
       directoriesOnly: false
