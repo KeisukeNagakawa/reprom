@@ -1,131 +1,145 @@
 # asker
 
-**asker** は、指定したディレクトリ構成とファイル内容をひとつの Markdown ファイルにまとめる CLI ツールです。  
-ChatGPT などの AI にコードを渡す際、大量のファイルを個別にコピー＆ペーストする手間を省きます。
+**asker** is a command-line tool (CLI) that exports a specified directory structure and file contents into a single Markdown file. This makes it easy to share code with AI tools (e.g., ChatGPT) without manually copying and pasting multiple files.
 
-- ディレクトリ構成を `tree` コマンドのような形式で出力
-- 対象のファイル内容をすべて Markdown にまとめて出力
-- ファイルの先頭・末尾に挿入する文言（説明や質問など）を柔軟に設定可能
-- 最終的に生成される Markdown の合計文字数を出力
-- 1 つの設定ファイル (YAML) 内で複数の設定セットを管理し、用途に応じて使い分け
+## Features
 
-## 特徴
+- **Directory Tree**: Generate a tree-like directory overview, similar to the `tree` command.
+- **File Contents**: Gather the contents of all target files into one Markdown.
+- **Flexible Pre/Post Text**: Insert custom text (e.g., instructions, questions) at the beginning or end of the output.
+- **Multiple Configurations**: Manage multiple sets of configuration in one YAML file.
+- **Usage Statistics**: Display the total character count of the generated Markdown.
+- **Clipboard or File Output**: Choose to export to a `.md` file or copy the Markdown directly to your clipboard.
 
-- **複数の設定**: `configs` 配列で複数の設定を定義可能
-- **ターゲット指定**: `include` と `exclude`、さらに `filePatterns` を組み合わせて対象ファイルを柔軟に指定
-- **tree 表示**: ディレクトリのみ表示・最大深度などオプションを通じて制御
-- **Markdown 出力**: 1 つの `.md` ファイルにまとめられるため、ChatGPT への貼り付けが容易
-- **統計情報**: 生成した Markdown の**合計文字数**を最後に表示
+## Installation
 
-## インストール
-
-プロジェクト内で devDependencies として使う場合:
+If you would like to use **asker** within an existing project (as a devDependency):
 
 ```bash
 npm install --save-dev asker
 ```
 
-または、
+Or with Yarn:
 
 ```bash
 yarn add --dev asker
 ```
 
-## 使い方
+## Usage
 
-1. **設定ファイルの作成**  
-   プロジェクトルート等に `asker.config.yaml` といった名前で YAML ファイルを作成し、以下のように設定します。
+### 1. Create a Configuration File
 
-   ```yaml
-   configs:
-     - name: "eric-evans"
-       preText: |
-         これは "eric-evans" 設定で出力されるファイルです。
-         相談したい内容としては…
-       postText: |
-         以上が "eric-evans" 設定の出力です。
-         何かアドバイスあればお願いします。
-       targets:
-         include:
-           - "packages/core"
-           - "packages/utils"
-         exclude:
-           - "packages/core/dist"
-           - "**/node_modules"
-         filePatterns:
-           - "**/*.ts"
-           - "**/*.js"
-       tree:
-         maxDepth: 5
-         directoriesOnly: false
+In your project root (or another directory), create a YAML file, e.g. `asker.config.yaml`, defining one or more configurations. Each configuration is an object in the `configs` array:
 
-     - name: "review"
-       preText: |
-         こちらは "review" 設定用です。
-         Web アプリをレビューしていただきたく…
-       postText: |
-         以上が "review" 設定の出力です。
-         問題点や修正点のご指摘をお待ちしています。
-       targets:
-         include:
-           - "apps/www"
-         exclude:
-           - "apps/www/node_modules"
-         filePatterns:
-           - "**/*.vue"
-           - "**/*.js"
-           - "**/*.ts"
-       tree:
-         maxDepth: 10
-         directoriesOnly: false
-   ```
+```yaml
+configs:
+  - name: "sample"
+    preText: |
+      This is a sample configuration output. Below is the project's structure.
+    postText: |
+      That concludes the sample configuration output.
+      Let me know if you have any questions.
+    targets:
+      include:
+        - "packages/core"
+        - "packages/utils"
+      exclude:
+        - "packages/core/dist"
+        - "**/node_modules"
+      filePatterns:
+        - "**/*.ts"
+        - "**/*.js"
+    tree:
+      maxDepth: 5
+      directoriesOnly: false
+    output: "file"
 
-   - `name` は CLI 実行時に使用する設定セットの識別子
-   - `preText` / `postText` は生成される Markdown の先頭・末尾に挿入
-   - `include` / `exclude` / `filePatterns` を組み合わせて対象ファイルを決定
-   - `tree` の設定でディレクトリ構成の表示を調整
+  - name: "review"
+    preText: |
+      This is the review configuration. Please review the code in the listed directories below.
+    postText: |
+      Thank you for reviewing the code!
+    targets:
+      include:
+        - "apps/www"
+      exclude:
+        - "apps/www/node_modules"
+      filePatterns:
+        - "**/*.vue"
+        - "**/*.js"
+        - "**/*.ts"
+    tree:
+      maxDepth: 10
+      directoriesOnly: false
+    output: "clipboard"
+```
 
-2. **CLI の実行**  
-   ターミナルで以下のコマンドを実行します。
+**Key Fields**:
 
-   ```bash
-   npx asker --config=asker.config.yaml --name=eric-evans
-   ```
+- `name`: An identifier used when running `asker`.
+- `preText` / `postText`: Text to insert at the start/end of the generated Markdown.
+- `targets`: Defines which paths and file patterns are included/excluded.
+  - `include`: Paths or directories to include.
+  - `exclude`: Paths or directories to exclude.
+  - `filePatterns`: Glob patterns (e.g., `**/*.ts`) to further limit which files are included.
+- `tree`: Options for the directory structure:
+  - `maxDepth`: How many levels deep the tree should display.
+  - `directoriesOnly`: If true, shows only directories in the tree.
+- `output`: Either `"file"` (writes to a Markdown file) or `"clipboard"` (copies the Markdown text to your system clipboard).
 
-   - `--config`: YAML 設定ファイルのパスを指定 (デフォルトは `asker.config.yaml`)
-   - `--name`: 実行したい設定セットを指定 (設定ファイル内の `configs[].name`)
+### 2. Run the CLI
 
-   実行すると、`asker-export-<設定名>.md` (例: `asker-export-eric-evans.md`) が生成され、
-   以下のような情報が 1 つの Markdown にまとめられます。
+In a terminal:
 
-   1. `preText` に記載した文言
-   2. ディレクトリ構成 (`tree` コマンド風)
-   3. 対象ファイルの全内容 (拡張子に応じてコードブロックを自動判定)
-   4. `postText` に記載した文言
-   5. **合計文字数** の統計情報
+```bash
+npx asker --config=asker.config.yaml --name=sample
+```
 
-3. **package.json の scripts に登録する例**  
-   毎回同じオプションを打つのが面倒な場合、`package.json` にスクリプトを追加しておくと便利です。
+- **`--config`**: Path to the YAML config file (default: `asker.config.yaml`).
+- **`--name`**: Which configuration (by `name`) to use within that YAML.
 
-   ```jsonc
-   {
-     "scripts": {
-       "export:eric-evans": "asker --config=asker.config.yaml --name=eric-evans",
-       "export:review": "asker --config=asker.config.yaml --name=review"
-     }
-   }
-   ```
+Depending on the configuration:
 
-   以後は `npm run export:eric-evans` などでサクッと実行できます。
+- If `output` is `"file"`, a Markdown file (e.g., `asker-sample.md`) is generated.
+- If `output` is `"clipboard"`, the generated Markdown is directly copied to your clipboard (and no `.md` file is created).
 
-## 出力されるファイルのイメージ
+### 3. Script Shortcut in `package.json`
 
-生成される Markdown (`asker-export-eric-evans.md`) は、ざっくり以下のような構造です:
+If you prefer not to type the same CLI flags repeatedly, you can add scripts to your `package.json`:
+
+```jsonc
+{
+  "scripts": {
+    "export:sample": "asker --config=asker.config.yaml --name=sample",
+    "export:review": "asker --config=asker.config.yaml --name=review"
+  }
+}
+```
+
+Then simply run:
+
+```bash
+npm run export:sample
+```
+
+(or `yarn export:sample`) to generate the Markdown.
+
+## Example Output
+
+When `asker` runs, it creates a single Markdown output (or copies it to the clipboard) with the following structure:
+
+1. **Pre-Text** (from the config’s `preText` field)
+2. **Directory Structure** (similar to the `tree` command)
+3. **File Contents** (one big Markdown file containing each file’s content)
+4. **Post-Text** (from `postText`)
+5. **Total Character Count** (appended at the very end of the output in the console logs)
+
+Here is a brief illustration:
 
 ```markdown
-(ここに preText が挿入される)
+(This is your preText.)
 
-## ディレクトリ構成
+# Directory Structure
 ```
 
 ```
@@ -139,51 +153,40 @@ packages
 ```
 
 ````
-## ファイル一覧と内容
+# File Contents
 
-### packages/core/index.ts
+## packages/core/index.ts
 ```ts
-// index.ts の中身
+// content from index.ts
+```
 ````
 
-(他のファイルも同様に続く)
+(Any additional files in the same manner)
 
-(ここに postText が挿入される)
+(This is your postText.)
 
-## 統計情報
+## Developper
 
-- **合計文字数**: 123456
+Keisuke Nagakawa
+
+## License
+
+(MIT or other license text)
 
 ```
 
-## オプション・機能
+---
 
-- **複数設定セット**:
-  - `asker.config.yaml` の `configs[]` にいくつでも設定セットを追加可能
-  - `--name` オプションで実行時に使う設定を選択
-- **ターゲット指定**:
-  - `include`: 対象に含めたいディレクトリ・パス
-  - `exclude`: 除外したいディレクトリ・パス
-  - `filePatterns`: ファイル拡張子や glob パターン (例: `**/*.ts`, `**/*.js`)
-- **tree 表示**:
-  - `maxDepth`: ツリーを再帰的にどの階層まで表示するか
-  - `directoriesOnly`: ディレクトリのみを表示するかどうか
-- **先頭・末尾メッセージ**:
-  - `preText`: Markdown の最初に挿入
-  - `postText`: Markdown の最後に挿入
-- **統計情報**:
-  - 出力した Markdown 全体の文字数を最後に追記
+## License
 
-## ライセンス
+Use the [MIT License](./LICENSE) or any other license of your choice. Be sure to include a `LICENSE` file if you plan to publish to npm publicly.
 
-[MIT License](./LICENSE)
+## Contributing
 
-ご自由にご利用ください。
+- Feel free to open issues or submit pull requests if you find bugs or want to propose features.
+- Enjoy efficient sharing of code with AI tools!
 
-## コントリビュート
+---
 
-- バグ報告や機能要望は Issue へ
-- プルリクエスト歓迎します
-
-気軽にご利用いただき、ChatGPT とのやりとりが快適になることを願っています。
+**asker**: Simplify your code-sharing workflow with a single command.
 ```
