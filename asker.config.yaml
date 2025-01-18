@@ -27,7 +27,7 @@ configs:
       Here is the file and directory structure of asker. Read it carefully and answer user's question placed at the end.
     postText: |
       Question:
-    output: "clipboard" # クリップボードにコピーする
+    output: "clipboard"
     targets:
       include:
         - "apps/www"

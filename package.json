@@ -2,10 +2,17 @@
   "name": "asker",
   "version": "1.0.0",
   "description": "A CLI tool to export directory structure and file contents into a single Markdown for AI.",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "bin": {
     "asker": "bin/asker.js"
   },
+  "files": [
+    "dist",
+    "bin",
+    "LICENSE",
+    "readme.md",
+    "asker.config.yaml"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/src/index.js",
