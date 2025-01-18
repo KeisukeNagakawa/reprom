@@ -1,7 +1,6 @@
 import fg from "fast-glob";
 import path from "path";
 import { TargetsConfig } from "./config";
-
 export function collectFiles(targets: TargetsConfig): string[] {
   const { include, exclude = [], filePatterns = [] } = targets;
   // パターンの組み立ては「そのまま」あるいは "**/*" デフォルトにする程度にしておく

@@ -1,5 +1,4 @@
-これは "eric-evans" 設定で出力されるファイルです。
-相談したい内容としては…
+以下はaskerのファイルとディレクトリ構造の一覧です。
 
 
 # Directory Structure
@@ -58,7 +57,6 @@ export function loadConfig(filePath: string): ConfigSet[] {
 import fg from "fast-glob";
 import path from "path";
 import { TargetsConfig } from "./config";
-
 export function collectFiles(targets: TargetsConfig): string[] {
   const { include, exclude = [], filePatterns = [] } = targets;
   // パターンの組み立ては「そのまま」あるいは "**/*" デフォルトにする程度にしておく
@@ -331,11 +329,7 @@ export function generateTree(paths: string[], config: TreeConfig = {}): string {
 
 ```
 
-以上が "eric-evans" 設定の出力です。
-何かアドバイスあればお願いします。
-
-
 
 
 ## 統計情報
-- **合計文字数**: 7937
+- **合計文字数**: 7873

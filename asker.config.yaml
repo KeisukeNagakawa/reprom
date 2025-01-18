@@ -1,14 +1,11 @@
 configs:
-  - name: "eric-evans"
+  - name: "asker"
     preText: |
-      これは "eric-evans" 設定で出力されるファイルです。
-      相談したい内容としては…
-    postText: |
-      以上が "eric-evans" 設定の出力です。
-      何かアドバイスあればお願いします。
+      以下はaskerのファイルとディレクトリ構造の一覧です。
     targets:
       include:
         - "src"
+        - "bin"
       exclude:
         - "**/node_modules"
         - "dist"
@@ -22,10 +19,8 @@ configs:
   - name: "review"
     preText: |
       こちらは "review" 設定用です。
-      Web アプリをレビューしていただきたく…
     postText: |
       以上が "review" 設定の出力です。
-      問題点や修正点のご指摘をお待ちしています。
     targets:
       include:
         - "apps/www"
