@@ -2,6 +2,7 @@ configs:
   - name: "asker"
     preText: |
       以下はaskerのファイルとディレクトリ構造の一覧です。
+    output: "clipboard" # "file" or "clipboard"
     targets:
       include:
         - "src"
@@ -25,6 +26,7 @@ configs:
       こちらは "review" 設定用です。
     postText: |
       以上が "review" 設定の出力です。
+    output: "clipboard" # クリップボードにコピーする
     targets:
       include:
         - "apps/www"

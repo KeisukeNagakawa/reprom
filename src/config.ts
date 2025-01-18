@@ -12,12 +12,15 @@ export interface TreeConfig {
   directoriesOnly?: boolean;
 }
 
+export type OutputOption = "file" | "clipboard";
+
 export interface ConfigSet {
   name: string;
   preText?: string;
   postText?: string;
   targets: TargetsConfig;
   tree?: TreeConfig;
+  output?: OutputOption; // 追加
 }
 
 interface RootConfig {

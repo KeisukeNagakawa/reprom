@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { spawnSync } from "child_process"; // ← 追加
 import { loadConfig, ConfigSet } from "./config";
 import { collectFiles } from "./fileCollector";
 import { generateTree } from "./treeGenerator";
@@ -10,6 +11,40 @@ import { generateMarkdown } from "./markdownGenerator";
 interface Arguments {
   config: string;
   name?: string;
+}
+
+/**
+ * OSごとのクリップボードへコピーするための関数。
+ * macOS: pbcopy
+ * Windows: clip
+ * Linux: xclip (要 xclip インストール)
+ */
+function copyToClipboard(text: string): void {
+  const platform = process.platform;
+
+  let command = "";
+  let args: string[] = [];
+
+  if (platform === "darwin") {
+    // macOS
+    command = "pbcopy";
+  } else if (platform === "win32") {
+    // Windows
+    command = "clip";
+  } else {
+    // Linux (xclip が必要)
+    command = "xclip";
+    args = ["-selection", "clipboard"];
+  }
+
+  const proc = spawnSync(command, args, {
+    input: text,
+    stdio: ["pipe", "ignore", "ignore"], // 標準出力・エラーは表示しない
+  });
+
+  if (proc.error) {
+    console.error(`Error copying to clipboard: ${proc.error.message}`);
+  }
 }
 
 async function main() {
@@ -29,11 +64,10 @@ async function main() {
 
   // 2. 設定ファイルの読み込み
   const configFilePath = path.resolve(process.cwd(), argv.config);
-  const allConfigs = loadConfig(configFilePath); // asker.config.yaml から読み込み
+  const allConfigs = loadConfig(configFilePath);
 
   let targetConfig: ConfigSet;
   if (!argv.name) {
-    // --name オプションが指定されなかった場合、最初の設定を使用
     targetConfig = allConfigs[0];
   } else {
     const found = allConfigs.find((c) => c.name === argv.name);
@@ -64,11 +98,17 @@ async function main() {
   const mdFinal =
     mdOutput + `\n\n## 統計情報\n- **合計文字数**: ${totalChars}\n`;
 
-  // 7. ファイル出力
+  // 7. 出力先の判定
+  const outputType = targetConfig.output ?? "file";
   const outFile = `asker-${targetConfig.name}.md`;
-  fs.writeFileSync(outFile, mdFinal, "utf-8");
 
-  console.log(`Exported to ${outFile}`);
+  if (outputType === "file") {
+    fs.writeFileSync(outFile, mdFinal, "utf-8");
+    console.log(`Exported to ${outFile}`);
+  } else if (outputType === "clipboard") {
+    copyToClipboard(mdFinal);
+    console.log("Markdown has been copied to your clipboard.");
+  }
 }
 
 main().catch((err) => {
