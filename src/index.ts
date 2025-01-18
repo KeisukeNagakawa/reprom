@@ -101,12 +101,15 @@ async function main() {
   const outputType = targetConfig.output ?? "file";
   const outFile = `reprom-${targetConfig.name}.md`;
 
+  const name = targetConfig.name;
   if (outputType === "file") {
     fs.writeFileSync(outFile, mdOutput, "utf-8");
-    console.log(`Exported to ${outFile}`);
+    console.log(`Exported to ${outFile} for configuration "${name}"`);
   } else if (outputType === "clipboard") {
     copyToClipboard(mdOutput);
-    console.log("Markdown has been copied to your clipboard.");
+    console.log(
+      `Markdown has been copied to your clipboard for configuration "${name}".`
+    );
   }
 }
 
