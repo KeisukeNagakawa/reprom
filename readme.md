@@ -1,6 +1,6 @@
-# askify
+# repack
 
-**askify** is a command-line tool (CLI) that exports a specified directory structure and file contents into a single Markdown file. This makes it easy to share code with AI tools (e.g., ChatGPT) without manually copying and pasting multiple files.
+**repack** is a command-line tool (CLI) that exports a specified directory structure and file contents into a single Markdown file. This makes it easy to share code with AI tools (e.g., ChatGPT) without manually copying and pasting multiple files.
 
 ## Features
 
@@ -13,23 +13,23 @@
 
 ## Installation
 
-If you would like to use **askify** within an existing project (as a devDependency):
+If you would like to use **repack** within an existing project (as a devDependency):
 
 ```bash
-npm install --save-dev askify
+npm install --save-dev repack
 ```
 
 Or with Yarn:
 
 ```bash
-yarn add --dev askify
+yarn add --dev repack
 ```
 
 ## Usage
 
 ### 1. Create a Configuration File
 
-In your project root (or another directory), create a YAML file, e.g. `askify.config.yaml`, defining one or more configurations. Each configuration is an object in the `configs` array:
+In your project root (or another directory), create a YAML file, e.g. `repack.config.yaml`, defining one or more configurations. Each configuration is an object in the `configs` array:
 
 ```yaml
 configs:
@@ -76,7 +76,7 @@ configs:
 
 **Key Fields**:
 
-- `name`: An identifier used when running `askify`.
+- `name`: An identifier used when running `repack`.
 - `preText` / `postText`: Text to insert at the start/end of the generated Markdown.
 - `targets`: Defines which paths and file patterns are included/excluded.
   - `include`: Paths or directories to include.
@@ -92,15 +92,15 @@ configs:
 In a terminal:
 
 ```bash
-npx askify --config=askify.config.yaml --name=sample
+npx repack --config=repack.config.yaml --name=sample
 ```
 
-- **`--config`**: Path to the YAML config file (default: `askify.config.yaml`).
+- **`--config`**: Path to the YAML config file (default: `repack.config.yaml`).
 - **`--name`**: Which configuration (by `name`) to use within that YAML.
 
 Depending on the configuration:
 
-- If `output` is `"file"`, a Markdown file (e.g., `askify-sample.md`) is generated.
+- If `output` is `"file"`, a Markdown file (e.g., `repack-sample.md`) is generated.
 - If `output` is `"clipboard"`, the generated Markdown is directly copied to your clipboard (and no `.md` file is created).
 
 ### 3. Script Shortcut in `package.json`
@@ -110,8 +110,8 @@ If you prefer not to type the same CLI flags repeatedly, you can add scripts to 
 ```jsonc
 {
   "scripts": {
-    "export:sample": "askify --config=askify.config.yaml --name=sample",
-    "export:review": "askify --config=askify.config.yaml --name=review"
+    "export:sample": "repack --config=repack.config.yaml --name=sample",
+    "export:review": "repack --config=repack.config.yaml --name=review"
   }
 }
 ```
@@ -126,7 +126,7 @@ npm run export:sample
 
 ## Example Output
 
-When `askify` runs, it creates a single Markdown output (or copies it to the clipboard) with the following structure:
+When `repack` runs, it creates a single Markdown output (or copies it to the clipboard) with the following structure:
 
 1. **Pre-Text** (from the config’s `preText` field)
 2. **Directory Structure** (similar to the `tree` command)
@@ -188,5 +188,5 @@ Use the [MIT License](./LICENSE) or any other license of your choice. Be sure to
 
 ---
 
-**askify**: Simplify your code-sharing workflow with a single command.
+**repack**: Simplify your code-sharing workflow with a single command.
 ```

@@ -1,17 +1,17 @@
 {
-  "name": "askify",
+  "name": "repack",
   "version": "1.0.1",
   "description": "A CLI tool to export directory structure and file contents into a single Markdown for AI.",
   "main": "dist/src/index.js",
   "bin": {
-    "askify": "bin/askify.js"
+    "repack": "bin/repack.js"
   },
   "files": [
     "dist",
     "bin",
     "LICENSE",
     "readme.md",
-    "askify.config.yaml"
+    "repack.config.yaml"
   ],
   "scripts": {
     "build": "tsc",
