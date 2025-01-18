@@ -1,17 +1,17 @@
 {
-  "name": "repack",
+  "name": "reprom",
   "version": "1.0.1",
   "description": "A CLI tool to export directory structure and file contents into a single Markdown for AI.",
   "main": "dist/src/index.js",
   "bin": {
-    "repack": "bin/repack.js"
+    "reprom": "bin/reprom.js"
   },
   "files": [
     "dist",
     "bin",
     "LICENSE",
     "readme.md",
-    "repack.config.yaml"
+    "reprom.config.yaml"
   ],
   "scripts": {
     "build": "tsc",

@@ -52,7 +52,7 @@ async function main() {
   const argv = (await yargs(hideBin(process.argv))
     .option("config", {
       type: "string",
-      default: "repack.config.yaml",
+      default: "reprom.config.yaml",
       description: "設定ファイル(YAML)のパス",
     })
     .option("name", {
@@ -99,7 +99,7 @@ async function main() {
 
   // 7. 出力先の判定
   const outputType = targetConfig.output ?? "file";
-  const outFile = `repack-${targetConfig.name}.md`;
+  const outFile = `reprom-${targetConfig.name}.md`;
 
   if (outputType === "file") {
     fs.writeFileSync(outFile, mdOutput, "utf-8");

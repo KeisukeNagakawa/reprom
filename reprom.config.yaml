@@ -1,7 +1,7 @@
 configs:
   - name: "all"
     preText: |
-      Below is the file and directory structure of repack.
+      Below is the file and directory structure of reprom.
     output: "clipboard" # "file" or "clipboard"
     targets:
       include:
@@ -11,7 +11,7 @@ configs:
       exclude:
         - "**/node_modules"
         - "dist"
-        - "repack-repack.md"
+        - "reprom-reprom.md"
       filePatterns:
         - "**/*.ts"
         - "**/*.js"
@@ -24,7 +24,7 @@ configs:
 
   - name: "ai"
     preText: |
-      Here is the file and directory structure of repack. Read it carefully and answer user's question placed at the end.
+      Here is the file and directory structure of reprom. Read it carefully and answer user's question placed at the end.
     postText: |
       Question:
     output: "clipboard"
@@ -36,7 +36,7 @@ configs:
       exclude:
         - "**/node_modules"
         - "dist"
-        - "repack-repack.md"
+        - "reprom-reprom.md"
       filePatterns:
         - "**/*.vue"
         - "**/*.js"

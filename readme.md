@@ -1,6 +1,6 @@
-# repack
+# ReProm (Repository into Prompts)
 
-**repack** is a command-line tool (CLI) that exports a specified directory structure and file contents into a single Markdown file. This makes it easy to share code with AI tools (e.g., ChatGPT) without manually copying and pasting multiple files.
+**reprom** is a command-line tool (CLI) that exports a specified directory structure and file contents into a single Markdown file. This makes it easy to share code with AI tools (e.g., ChatGPT) without manually copying and pasting multiple files.
 
 ## Features
 
@@ -13,23 +13,23 @@
 
 ## Installation
 
-If you would like to use **repack** within an existing project (as a devDependency):
+If you would like to use **reprom** within an existing project (as a devDependency):
 
 ```bash
-npm install --save-dev repack
+npm install --save-dev reprom
 ```
 
 Or with Yarn:
 
 ```bash
-yarn add --dev repack
+yarn add --dev reprom
 ```
 
 ## Usage
 
 ### 1. Create a Configuration File
 
-In your project root (or another directory), create a YAML file, e.g. `repack.config.yaml`, defining one or more configurations. Each configuration is an object in the `configs` array:
+In your project root (or another directory), create a YAML file, e.g. `reprom.config.yaml`, defining one or more configurations. Each configuration is an object in the `configs` array:
 
 ```yaml
 configs:
@@ -76,7 +76,7 @@ configs:
 
 **Key Fields**:
 
-- `name`: An identifier used when running `repack`.
+- `name`: An identifier used when running `reprom`.
 - `preText` / `postText`: Text to insert at the start/end of the generated Markdown.
 - `targets`: Defines which paths and file patterns are included/excluded.
   - `include`: Paths or directories to include.
@@ -92,15 +92,15 @@ configs:
 In a terminal:
 
 ```bash
-npx repack --config=repack.config.yaml --name=sample
+npx reprom --config=reprom.config.yaml --name=sample
 ```
 
-- **`--config`**: Path to the YAML config file (default: `repack.config.yaml`).
+- **`--config`**: Path to the YAML config file (default: `reprom.config.yaml`).
 - **`--name`**: Which configuration (by `name`) to use within that YAML.
 
 Depending on the configuration:
 
-- If `output` is `"file"`, a Markdown file (e.g., `repack-sample.md`) is generated.
+- If `output` is `"file"`, a Markdown file (e.g., `reprom-sample.md`) is generated.
 - If `output` is `"clipboard"`, the generated Markdown is directly copied to your clipboard (and no `.md` file is created).
 
 ### 3. Script Shortcut in `package.json`
@@ -110,8 +110,8 @@ If you prefer not to type the same CLI flags repeatedly, you can add scripts to 
 ```jsonc
 {
   "scripts": {
-    "export:sample": "repack --config=repack.config.yaml --name=sample",
-    "export:review": "repack --config=repack.config.yaml --name=review"
+    "export:sample": "reprom --config=reprom.config.yaml --name=sample",
+    "export:review": "reprom --config=reprom.config.yaml --name=review"
   }
 }
 ```
@@ -126,7 +126,7 @@ npm run export:sample
 
 ## Example Output
 
-When `repack` runs, it creates a single Markdown output (or copies it to the clipboard) with the following structure:
+When `reprom` runs, it creates a single Markdown output (or copies it to the clipboard) with the following structure:
 
 1. **Pre-Text** (from the config’s `preText` field)
 2. **Directory Structure** (similar to the `tree` command)
@@ -167,11 +167,12 @@ packages
 
 ## Developper
 
-Keisuke Nagakawa
+Keisuke Nagakawa（永川 圭介）
+https://github.com/KeisukeNagakawa
 
 ## License
 
-(MIT or other license text)
+MIT
 
 ```
 
@@ -188,5 +189,5 @@ Use the [MIT License](./LICENSE) or any other license of your choice. Be sure to
 
 ---
 
-**repack**: Simplify your code-sharing workflow with a single command.
+**reprom**: Simplify your code-sharing workflow with a single command.
 ```
