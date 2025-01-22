@@ -1,6 +1,6 @@
 {
   "name": "reprom",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A CLI tool to export directory structure and file contents into a single Markdown for AI.",
   "main": "dist/src/index.js",
   "bin": {
